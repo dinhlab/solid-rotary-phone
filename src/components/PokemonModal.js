@@ -1,15 +1,12 @@
 import Box from '@mui/material/Box'
 import { FormProvider, FTextField } from './form'
 import Modal from '@mui/material/Modal'
-
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { alpha, Stack } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
-
 import { addPokemon } from '../features/pokemonSlice'
 import { useNavigate } from 'react-router-dom'
-
 const style = {
   position: 'absolute',
   top: '50%',
@@ -21,7 +18,6 @@ const style = {
   boxShadow: 24,
   p: 4
 }
-
 const defaultValues = {
   name: '',
   id: '',
@@ -29,24 +25,23 @@ const defaultValues = {
   type1: '',
   type2: ''
 }
-
 export default function PokemonModal ({ open, setOpen }) {
   const navigate = useNavigate()
   const methods = useForm(defaultValues)
   const {
     handleSubmit,
-    formState: { isSubmitting }
+    formState: { isSubmitting },
+    reset
   } = methods
   const dispatch = useDispatch()
-
-  const onSubmit = (data) => {
+  const handleFormSubmit = (data) => {
     const { name, id, url, type1, type2 } = data
     dispatch(addPokemon({ name, id, imgUrl: url, types: [type1, type2] }))
     navigate(`/pokemons/${id}`)
+    reset()
+    handleClose()
   }
-
   const handleClose = () => setOpen(false)
-
   return (
     <div>
       <Modal
@@ -56,7 +51,7 @@ export default function PokemonModal ({ open, setOpen }) {
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <FormProvider methods={methods} onSubmit={handleSubmit(handleFormSubmit)}>
             <Stack spacing={2}>
               <FTextField
                 name='name'
@@ -118,7 +113,6 @@ export default function PokemonModal ({ open, setOpen }) {
                   }
                 }}
               />
-
               <Box
                 sx={{
                   display: 'flex',

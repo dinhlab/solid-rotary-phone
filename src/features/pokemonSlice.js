@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import apiService from '../app/apiService'
 import { POKEMONS_PER_PAGE } from '../app/config'
-
 export const getPokemons = createAsyncThunk(
   'pokemons/getPokemons',
   async ({ page, search, type }, { rejectWithValue }) => {
@@ -12,11 +11,10 @@ export const getPokemons = createAsyncThunk(
       const response = await apiService.get(url)
       return response
     } catch (error) {
-      return rejectWithValue(error)
+      return rejectWithValue({ message: error.message })
     }
   }
 )
-
 export const getPokemonById = createAsyncThunk(
   'pokemons/getPokemonById',
   async (id, { rejectWithValue }) => {
@@ -26,11 +24,10 @@ export const getPokemonById = createAsyncThunk(
       if (!response) return rejectWithValue({ message: 'No data' })
       return response
     } catch (error) {
-      return rejectWithValue(error)
+      return rejectWithValue({ message: error.message })
     }
   }
 )
-
 export const addPokemon = createAsyncThunk(
   'pokemons/addPokemon',
   async ({ name, id, imgUrl, types }, { rejectWithValue }) => {
@@ -39,11 +36,10 @@ export const addPokemon = createAsyncThunk(
       await apiService.post(url, { name, id, url: imgUrl, types })
       return
     } catch (error) {
-      return rejectWithValue(error)
+      return rejectWithValue({ message: error.message })
     }
   }
 )
-
 export const editPokemon = createAsyncThunk(
   'pokemons/editPokemon',
   async ({ name, id, url, types }, { rejectWithValue }) => {
@@ -52,11 +48,10 @@ export const editPokemon = createAsyncThunk(
       await apiService.put(editUrl, { name, url, types })
       return
     } catch (error) {
-      return rejectWithValue(error)
+      return rejectWithValue({ message: error.message })
     }
   }
 )
-
 export const deletePokemon = createAsyncThunk(
   'pokemons/deletePokemon',
   async ({ id }, { rejectWithValue, dispatch }) => {
@@ -66,11 +61,10 @@ export const deletePokemon = createAsyncThunk(
       dispatch(getPokemonById())
       return
     } catch (error) {
-      return rejectWithValue(error)
+      return rejectWithValue({ message: error.message })
     }
   }
 )
-
 const initialState = {
   isLoading: false,
   pokemons: [],
@@ -83,7 +77,6 @@ const initialState = {
   type: '',
   page: 1
 }
-
 const pokemonSlice = createSlice({
   name: 'pokemons',
   initialState,
@@ -191,6 +184,5 @@ const pokemonSlice = createSlice({
       })
   }
 })
-
 export const { changePage, searchQuery, typeQuery } = pokemonSlice.actions
 export default pokemonSlice.reducer

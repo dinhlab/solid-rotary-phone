@@ -198,7 +198,7 @@ export const DetailPage = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography color='white'>Abilities</Typography>
-                    <div>{pokemon?.abilities || 'Unknown'}</div>
+                    <div>{pokemon?.abilities ? pokemon.abilities.join(', ') : 'Unknown'}</div>
                   </Grid>
                 </Grid>
               </Box>
